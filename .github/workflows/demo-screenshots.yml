@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   screenshots:
@@ -41,3 +41,20 @@ jobs:
           path: screenshots/*.png
           if-no-files-found: error
           retention-days: 30
+      - name: Publish screenshots for README on master
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/jersey-screenshots
+          cp screenshots/*.png /tmp/jersey-screenshots/
+          cd /tmp/jersey-screenshots
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b screenshots
+          git add *.png
+          git commit -m "docs: update demo screenshots from ${GITHUB_SHA}"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin screenshots
