@@ -1,19 +1,28 @@
-name: Fuggedaboutit Radio Intel Mac Package
+name: Fuggedaboutit Radio Intel Mac Preview Release
 
 on:
   workflow_dispatch:
   push:
+    branches: [master]
     tags:
       - 'v*-mac-beta*'
 
 permissions:
   contents: write
 
+concurrency:
+  group: fuggedaboutit-macos-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   package-intel:
+    # Only run for our fork, never publish from an upstream repository.
+    if: github.repository == 'BaconDisk22/FUGGEDABOUTIT-RADIO'
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
+      - name: Validate branding assets
+        run: bash scripts/check-jersey-branding.sh
       - uses: actions/setup-go@v5
         with:
           go-version: '1.24'
@@ -26,7 +35,9 @@ jobs:
             (cd "cmd/$cmd" && CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -trimpath -o "../../dist/fuggedaboutit-$cmd" .)
           done
           file dist/fuggedaboutit-*
-      - name: Package command-line preview (NOT a desktop app)
+          test -s dist/fuggedaboutit-server
+          test -s dist/fuggedaboutit-ingestor
+      - name: Package CLI preview (not a desktop application)
         run: |
           set -euo pipefail
           mkdir -p package
@@ -37,20 +48,36 @@ jobs:
           FUGGEDABOUTIT RADIO — Intel macOS command-line preview
           This is NOT yet a double-clickable .app or DMG.
           The server and ingestor are unsigned Go executables.
-          Configuration and an MQTT packet source are required.
+          Configuration, an initialized SQLite database, and an MQTT packet source are required.
           Refer to repository documentation before running.
           EOF
-          cd package
-          zip -qr ../fuggedaboutit-radio-macos-intel-cli-preview.zip .
+          (cd package && zip -qr ../fuggedaboutit-radio-macos-intel-cli-preview.zip .)
+          shasum -a 256 fuggedaboutit-radio-macos-intel-cli-preview.zip > SHA256SUMS
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4
         with:
           name: fuggedaboutit-radio-macos-intel-cli-preview
-          path: fuggedaboutit-radio-macos-intel-cli-preview.zip
+          path: |
+            fuggedaboutit-radio-macos-intel-cli-preview.zip
+            SHA256SUMS
           if-no-files-found: error
-      - name: Publish prerelease on beta tag
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Publish successful builds to GitHub Releases
+        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" fuggedaboutit-radio-macos-intel-cli-preview.zip --prerelease --title "Fuggedaboutit Radio ${GITHUB_REF_NAME} — Intel CLI preview" --notes "Unsigned Intel macOS command-line preview. Not yet a click-to-open Mac app. Requires configuration and MQTT data source."
+          set -euo pipefail
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            RELEASE_TAG="${GITHUB_REF_NAME}"
+            TITLE="Fuggedaboutit Radio ${RELEASE_TAG} — Intel CLI preview"
+          else
+            RELEASE_TAG="intel-preview-latest"
+            TITLE="Fuggedaboutit Radio — Latest successful Intel CLI preview"
+          fi
+          NOTES="Unsigned Intel macOS command-line preview, NOT a click-to-open .app or DMG. Requires an initialized database, configuration and an MQTT source. Built from commit ${GITHUB_SHA}."
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh release upload "${RELEASE_TAG}" fuggedaboutit-radio-macos-intel-cli-preview.zip SHA256SUMS --clobber
+            gh release edit "${RELEASE_TAG}" --title "${TITLE}" --notes "${NOTES}" --prerelease
+          else
+            gh release create "${RELEASE_TAG}" fuggedaboutit-radio-macos-intel-cli-preview.zip SHA256SUMS --prerelease --title "${TITLE}" --notes "${NOTES}" --target "${GITHUB_SHA}"
+          fi
