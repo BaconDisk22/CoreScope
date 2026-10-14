@@ -1,4 +1,37 @@
-# CoreScope
+# 🤌 FUGGEDABOUTIT RADIO 🇮🇹
+
+### *What Exit? We Got Your Signal.*
+
+**AYYY, HOW YOU DOIN'?** Welcome to **FUGGEDABOUTIT RADIO**, a Jersey-flavored MeshCore network analyzer. Keep tabs on the crew, follow packets down the Parkway, and find out who's got a signal. Capisce?
+
+> **No signal? Fuggedaboutit!** Under the hood, this is a fork of [CoreScope](https://github.com/Kpa-clawbot/CoreScope), with the same MeshCore monitoring technology. No connection to the State of New Jersey, its highway agencies, or any Italian-American organization is implied.
+
+## 🍕 The Jersey Menu
+
+- **The Parkway** — your network overview, with the whole crew's activity.
+- **What Exit?** — live packet trace and map. Don't miss your turn.
+- **The Crew** — node directory and per-node analytics.
+- **Gabagool Communications** — channel chat, where everybody's got something to say.
+- **Under the Hood** — packet diagnostics, observer health, and signal statistics.
+- **Tony's Office** — settings and theme customization. Respect the configuration.
+
+## 🎨 Jersey Colors
+
+Parkway Black `#101418` · Turnpike Green `#006B3C` · Gabagool Red `#C62828` · Pork Roll Gold `#FFCC33` · Diner White `#F5F5F0`.
+
+## 🍎 Intel Mac Edition — In Development
+
+A double-clickable macOS app for Intel Macs is **planned, not yet available**. The existing CoreScope backend and browser UI still need desktop packaging and testing. Until then, use the self-hosted setup below. Don't mistake the upstream container image for a branded Mac release.
+
+## 🛠️ Technical Docs & Upstream Credit
+
+The installation instructions, screenshots, benchmarks, commands, and paths below document the **original CoreScope architecture**. They remain for technical accuracy while this fork's rebrand is in progress. Names such as `corescope`, `config.json`, and upstream image URLs in commands are functional identifiers, not finished FUGGEDABOUTIT RADIO branding.
+
+**Original project:** [Kpa-clawbot/CoreScope](https://github.com/Kpa-clawbot/CoreScope). **License:** GPL-3.0-or-later. Preserve original notices and attribution.
+
+---
+
+# Original CoreScope Technical Reference
 
 [![Go Server Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Kpa-clawbot/CoreScope/badges/go-server-coverage.json)](https://github.com/Kpa-clawbot/CoreScope/actions/workflows/deploy.yml)
 [![Go Ingestor Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Kpa-clawbot/CoreScope/badges/go-ingestor-coverage.json)](https://github.com/Kpa-clawbot/CoreScope/actions/workflows/deploy.yml)
