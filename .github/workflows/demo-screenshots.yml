@@ -1,0 +1,43 @@
+name: Demo Screenshots
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    if: github.repository == 'BaconDisk22/FUGGEDABOUTIT-RADIO'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and Chromium
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+      - name: Start local demo server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public > /tmp/fuggedaboutit-demo-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/demo.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/fuggedaboutit-demo-http.log
+          exit 1
+      - name: Capture desktop and mobile screenshots
+        run: node scripts/capture-demo-screenshots.cjs
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuggedaboutit-demo-screenshots
+          path: screenshots/*.png
+          if-no-files-found: error
+          retention-days: 30
