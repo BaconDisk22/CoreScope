@@ -2,40 +2,93 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FUGGEDABOUTIT RADIO — Demo Mode</title>
 <style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#101418;color:#f5f5f0}
-*{box-sizing:border-box}body{margin:0}header{background:#006b3c;padding:22px 5%;border-bottom:5px solid #ffcc33}
-h1{margin:0;font-size:clamp(25px,4vw,42px)}header p{margin:6px 0 0}main{max-width:1250px;margin:auto;padding:28px 20px}
-.badge{background:#c62828;padding:8px 12px;border-radius:7px;font-weight:bold;display:inline-block}
-.banner{background:#343a40;padding:14px;border-left:5px solid #ffcc33;margin:20px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
-.card{background:#20272b;border:1px solid #4b565b;border-radius:12px;padding:20px}
-.card strong{font-size:32px;color:#ffcc33;display:block;margin:12px 0}
-h2{margin:28px 0 12px}table{width:100%;border-collapse:collapse;background:#20272b}
-th,td{text-align:left;padding:13px;border-bottom:1px solid #465157}th{color:#ffcc33}
-.status{color:#8ee0aa}footer{padding:22px;text-align:center;color:#b3bbbd}
-button{background:#ffcc33;color:#101418;border:0;padding:10px 16px;border-radius:7px;font-weight:bold;cursor:pointer}
+:root{color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#101418;color:#f5f5f0}
+*{box-sizing:border-box}body{margin:0;min-width:300px}button,input,select{font:inherit}
+header{background:#182321;border-bottom:3px solid #ffcc33;padding:24px max(20px,calc((100vw - 1180px)/2))}
+header .eyebrow{color:#ffcc33;letter-spacing:.14em;text-transform:uppercase;font-size:12px;font-weight:800}
+h1{margin:7px 0 5px;font-size:clamp(26px,4vw,42px);letter-spacing:-.035em}header p{margin:0;color:#c3d5cb}
+main{max-width:1220px;margin:auto;padding:28px 20px}.badge{background:#6f2424;border:1px solid #d84b4b;padding:7px 12px;border-radius:999px;font-weight:800;display:inline-block;font-size:12px;letter-spacing:.07em}
+.banner{background:#222a2e;padding:15px 18px;border-left:4px solid #ffcc33;margin:20px 0 24px;line-height:1.6;color:#e4e8e6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}.card{background:#20272b;border:1px solid #455057;border-radius:12px;padding:20px}
+.card strong{font-size:32px;color:#ffcc33;display:block;margin:10px 0}.card small{color:#c4cdcc}h2{font-size:20px;margin:0}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:30px 0 13px;flex-wrap:wrap}
+.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+button,select,input{border:1px solid #64706e;border-radius:7px;padding:10px 12px;background:#252f32;color:#fff}
+button{cursor:pointer}button.primary{background:#ffcc33;color:#101418;border-color:#ffcc33;font-weight:800}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffcc33;outline-offset:2px}
+.table-wrap{overflow-x:auto;border:1px solid #455057;border-radius:12px}
+table{width:100%;border-collapse:collapse;background:#20272b;min-width:550px}
+th,td{text-align:left;padding:14px;border-bottom:1px solid #465157}th{color:#ffcc33;font-size:13px}
+tr:last-child td{border-bottom:0}.status{color:#8ee0aa}.muted{color:#c0cac8}
+#traffic{min-height:150px;max-height:310px;overflow:auto;padding:0}
+.packet{padding:13px 16px;border-bottom:1px solid #455057;line-height:1.5}
+.packet:last-child{border-bottom:0}.packet time{color:#ffcc33;margin-right:10px;font-variant-numeric:tabular-nums}
+footer{padding:24px;text-align:center;color:#b3bbbd;font-size:13px}
+@media(max-width:600px){main{padding:20px 14px}.card{padding:16px}.controls{width:100%}.controls input{flex:1;min-width:110px}}
 </style></head><body>
-<header><h1>FUGGEDABOUTIT RADIO</h1><p>What Exit? We Got Your Signal.</p></header>
-<main><span class="badge" id="demo-badge">DEMO MODE • SIMULATED DATA</span>
-<div class="banner">This is a standalone, offline-friendly demonstration. No real radio, MQTT broker, or network is connected. All nodes and packets below are fictional.</div>
+<header><div class="eyebrow">Garden State Communications</div><h1>FUGGEDABOUTIT RADIO</h1><p>What Exit? We Got Your Signal.</p></header>
+<main><span class="badge" id="demo-badge">DEMO MODE · SIMULATED DATA</span>
+<div class="banner" role="note">Explore the interface without connecting a radio. Every node, signal reading, and packet shown here is fictional. Nothing is transmitted or received.</div>
 <div class="grid" aria-label="Simulated network metrics">
-<section class="card"><div>Nodes in the Crew</div><strong>24</strong><small>Simulated active nodes</small></section>
-<section class="card"><div>Packets on the Parkway</div><strong>1,284</strong><small>Simulated packet total</small></section>
-<section class="card"><div>Signal Strength</div><strong>-87 dBm</strong><small>Illustrative sample</small></section>
-<section class="card"><div>Network Status</div><strong class="status">ONLINE*</strong><small>*Demo only, not a real connection</small></section>
-</div><h2>The Crew — Sample Nodes</h2>
-<table><thead><tr><th>Node</th><th>Region</th><th>RSSI</th><th>Status</th></tr></thead><tbody>
-<tr><td>Exit 14A Relay</td><td>North Jersey</td><td>-78 dBm</td><td class="status">Demo active</td></tr>
-<tr><td>Garden State Base</td><td>Central Jersey</td><td>-91 dBm</td><td class="status">Demo active</td></tr>
-<tr><td>Shore Patrol</td><td>South Jersey</td><td>-83 dBm</td><td class="status">Demo active</td></tr>
-</tbody></table><h2>Gabagool Comms — Sample Traffic</h2>
-<div class="card" id="traffic">12:04:03 · Exit 14A Relay → Garden State Base · Packet received (simulated)<br>
-12:04:01 · Shore Patrol → Exit 14A Relay · Packet relayed (simulated)</div>
-<p><button type="button" id="next">Generate sample packet</button></p>
-</main><footer>FUGGEDABOUTIT RADIO • Demo data only • No hardware required</footer>
+<section class="card"><div>Nodes in the Crew</div><strong>24</strong><small>Sample node inventory</small></section>
+<section class="card"><div>Packets on the Parkway</div><strong id="packet-count">1,284</strong><small>Illustrative packet count</small></section>
+<section class="card"><div>Signal Strength</div><strong>-87 dBm</strong><small>Example RSSI</small></section>
+<section class="card"><div>Network Status</div><strong class="status">DEMO</strong><small>No live connection</small></section>
+</div>
+<div class="section-head"><h2>The Crew — Sample Nodes</h2><div class="controls"><label for="region">Region</label><select id="region"><option value="all">All regions</option><option>North Jersey</option><option>Central Jersey</option><option>South Jersey</option></select></div></div>
+<div class="table-wrap"><table><thead><tr><th>Node</th><th>Region</th><th>RSSI</th><th>Status</th></tr></thead><tbody id="nodes">
+<tr data-region="North Jersey"><td>Exit 14A Relay</td><td>North Jersey</td><td>-78 dBm</td><td class="status">Demo active</td></tr>
+<tr data-region="Central Jersey"><td>Garden State Base</td><td>Central Jersey</td><td>-91 dBm</td><td class="status">Demo active</td></tr>
+<tr data-region="South Jersey"><td>Shore Patrol</td><td>South Jersey</td><td>-83 dBm</td><td class="status">Demo active</td></tr>
+</tbody></table></div>
+<div class="section-head"><h2>Gabagool Comms — Sample Traffic</h2><div class="controls">
+<input id="search" type="search" placeholder="Filter packets" aria-label="Filter sample packets">
+<button id="reset" type="button">Reset</button><button class="primary" id="next" type="button">Add sample packet</button>
+</div></div>
+<div class="card" id="traffic" role="log" aria-label="Simulated packet traffic" aria-live="polite"></div>
+<p class="muted" id="visible-count" aria-live="polite"></p>
+</main><footer>FUGGEDABOUTIT RADIO · Offline demonstration · No hardware required</footer>
 <script>
-let n=0;document.getElementById('next').addEventListener('click',()=>{
- n++;const row=document.createElement('div');row.textContent='Demo packet #'+n+' · Garden State Base → Shore Patrol · Simulated';
- document.getElementById('traffic').prepend(row);
-});
+(() => {
+  'use strict';
+  const initial = [
+    {time:'12:04:03',from:'Exit 14A Relay',to:'Garden State Base',type:'Packet received'},
+    {time:'12:04:01',from:'Shore Patrol',to:'Exit 14A Relay',type:'Packet relayed'}
+  ];
+  let packets = initial.map(p=>({...p}));
+  let counter = 0;
+  const traffic=document.getElementById('traffic');
+  const search=document.getElementById('search');
+  const count=document.getElementById('packet-count');
+  const visible=document.getElementById('visible-count');
+  function render(){
+    const query=search.value.trim().toLowerCase();
+    const matches=packets.filter(p=>[p.time,p.from,p.to,p.type].join(' ').toLowerCase().includes(query));
+    traffic.replaceChildren();
+    for(const p of matches){
+      const row=document.createElement('div');row.className='packet';
+      const time=document.createElement('time');time.textContent=p.time;
+      row.append(time,document.createTextNode(p.from+' → '+p.to+' · '+p.type+' (simulated)'));
+      traffic.append(row);
+    }
+    visible.textContent=matches.length+' of '+packets.length+' sample packets shown';
+    count.textContent=(1284+counter).toLocaleString('en-US');
+  }
+  search.addEventListener('input',render);
+  document.getElementById('region').addEventListener('change',e=>{
+    for(const row of document.querySelectorAll('#nodes tr'))row.hidden=e.target.value!=='all'&&row.dataset.region!==e.target.value;
+  });
+  document.getElementById('next').addEventListener('click',()=>{
+    counter++;
+    const seconds=String(counter%60).padStart(2,'0');
+    packets.unshift({time:'12:05:'+seconds,from:'Garden State Base',to:'Shore Patrol',type:'Sample packet #'+counter});
+    render();
+  });
+  document.getElementById('reset').addEventListener('click',()=>{
+    counter=0;packets=initial.map(p=>({...p}));search.value='';document.getElementById('region').value='all';
+    for(const row of document.querySelectorAll('#nodes tr'))row.hidden=false;
+    render();
+  });
+  render();
+})();
 </script></body></html>
