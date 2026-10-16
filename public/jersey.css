@@ -41,3 +41,12 @@
 /* Retain the original two-node live packet pulse in the Jersey mark. */
 .jersey-radio-mark{display:inline-flex;align-items:center;gap:5px}
 .jersey-signal{flex:none;overflow:visible}
+
+/* At tablet widths keep the full Jersey identity without crowding nav actions. */
+@media (min-width:641px) and (max-width:900px){
+  .jersey-brand-text{font-size:10px;letter-spacing:0}
+  .jersey-brand-text small{display:none}
+  .jersey-radio-mark{padding:4px 3px;font-size:12px;gap:2px}
+  .jersey-signal{width:30px;height:18px}
+  .nav-brand .jersey-wordmark{gap:4px}
+}
