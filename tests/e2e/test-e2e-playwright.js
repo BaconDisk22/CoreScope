@@ -309,25 +309,28 @@ async function run() {
     await page.goto(BASE, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('nav, .navbar, .nav, [class*="nav"]');
     const title = await page.title();
-    assert(title.toLowerCase().includes('corescope'), `Title "${title}" doesn't contain CoreScope`);
+    assert(/corescope|fuggedaboutit radio/i.test(title), `Unexpected application title: ${title}`);
     const nav = await page.$('nav, .navbar, .nav, [class*="nav"]');
     assert(nav, 'Nav bar not found');
   });
 
-  // #1137 follow-up: Aldrich webfont must actually load so the navbar logo SVG
-  // renders in the intended typeface (not the silent monospace fallback).
-  await test('#1137 Aldrich webfont is loaded for navbar logo SVG', async () => {
+  // Branded forks use a text wordmark instead of the upstream Aldrich SVG.
+  // Keep the upstream font check when the original SVG logo is present.
+  await test('Navbar branding renders correctly', async () => {
     await page.goto(BASE, { waitUntil: 'domcontentloaded' });
-    // Explicitly request the font (waits for download). On the broken state
-    // there is no @font-face for Aldrich, so no FontFace matches and check()
-    // stays false — the assertion below fails on behavior, not infra.
+    const jerseyWordmark = page.locator('.jersey-wordmark');
+    if (await jerseyWordmark.count()) {
+      assert(await jerseyWordmark.first().isVisible(), 'Jersey wordmark is not visible');
+      assert(/fuggedaboutit/i.test(await jerseyWordmark.first().innerText()),
+        'Jersey wordmark is missing the app name');
+      return;
+    }
     const aldrichLoaded = await page.evaluate(async () => {
       try { await document.fonts.load('1em Aldrich'); } catch (_) {}
       await document.fonts.ready;
       return document.fonts.check('1em Aldrich');
     });
-    assert(aldrichLoaded, 'document.fonts.check("1em Aldrich") returned false — Aldrich is not loaded');
-    // Sanity: the inline SVG <text> still declares Aldrich in its font-family.
+    assert(aldrichLoaded, 'Aldrich is not loaded for the original navbar logo');
     const fontFamily = await page.evaluate(() => {
       const t = document.querySelector('nav svg text, .navbar svg text, header svg text');
       return t ? (t.getAttribute('font-family') || getComputedStyle(t).fontFamily) : null;

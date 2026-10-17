@@ -1,7 +1,19 @@
 /* Fuggedaboutit Radio brand layer: loaded after base stylesheet.
    Scope to dark mode to preserve original light mode and theme customization. */
 :root[data-theme="dark"] {
-  --nav-bg: #101418;\n  --nav-bg2: #222a2e;\n  --nav-text: #f5f5f0;\n  --nav-text-muted: #d0d6d1;\n  --surface-0: #101418;\n  --surface-1: #222a2e;\n  --surface-2: #293238;\n  --surface-3: #343a40;\n  --content-bg: #101418;\n  --card-bg: #222a2e;\n  --accent-strong: #006b3c;\n  --link-color: #ffcc33;\n  --accent-hover: #ffe082;
+  --nav-bg: #101418;
+  --nav-bg2: #222a2e;
+  --nav-text: #f5f5f0;
+  --nav-text-muted: #d0d6d1;
+  --surface-0: #101418;
+  --surface-1: #222a2e;
+  --surface-2: #293238;
+  --surface-3: #343a40;
+  --content-bg: #101418;
+  --card-bg: #222a2e;
+  --accent-strong: #006b3c;
+  --link-color: #ffcc33;
+  --accent-hover: #ffe082;
   --bg-primary: #101418;
   --background: #101418;
   --surface: #222a2e;
@@ -25,3 +37,16 @@
 :root[data-theme="dark"] .nav-link.active { color:#ffcc33; }
 :root[data-theme="dark"] .nav-brand:focus-visible { outline:2px solid #ffcc33; outline-offset:4px; }
 @media(max-width:640px) { .jersey-brand-text { font-size:10px; } .jersey-brand-text small { display:none; } }
+
+/* Retain the original two-node live packet pulse in the Jersey mark. */
+.jersey-radio-mark{display:inline-flex;align-items:center;gap:5px}
+.jersey-signal{flex:none;overflow:visible}
+
+/* At tablet widths keep the full Jersey identity without crowding nav actions. */
+@media (min-width:641px) and (max-width:900px){
+  .jersey-brand-text{font-size:10px;letter-spacing:0}
+  .jersey-brand-text small{display:none}
+  .jersey-radio-mark{padding:4px 3px;font-size:12px;gap:2px}
+  .jersey-signal{width:30px;height:18px}
+  .nav-brand .jersey-wordmark{gap:4px}
+}
